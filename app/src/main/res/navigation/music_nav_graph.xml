@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/music_nav_graph"
+    app:startDestination="@id/firstScreenFragment">
+
+    <fragment
+        android:id="@+id/firstScreenFragment"
+        android:name="com.pathakbau.musicwiki.ui.fragments.FirstScreenFragment"
+        android:label="FirstScreenFragment"
+        tools:layout="@layout/first_screen" >
+        <action
+            android:id="@+id/action_firstScreenFragment_to_genreDetailFragment"
+            app:destination="@id/genreDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/genreDetailFragment"
+        android:name="com.pathakbau.musicwiki.ui.fragments.GenreDetailFragment"
+        android:label="GenreDetailFragment"
+        tools:layout="@layout/genre_detail_screen">
+        <action
+            android:id="@+id/action_genreDetailFragment_to_albumDetailsFragment"
+            app:destination="@id/albumDetailsFragment" />
+        <action
+            android:id="@+id/action_genreDetailFragment_to_artistDetailsFragment"
+            app:destination="@id/artistDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/albumDetailsFragment"
+        android:name="com.pathakbau.musicwiki.ui.fragments.AlbumDetailsFragment"
+        android:label="AlbumDetailsFragment"
+        tools:layout="@layout/album_details_screen">
+        <action
+            android:id="@+id/action_albumDetailsFragment_to_genreDetailFragment"
+            app:destination="@id/genreDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/artistDetailsFragment"
+        android:name="com.pathakbau.musicwiki.ui.fragments.ArtistDetailsFragment"
+        android:label="ArtistDetailsFragment"
+        tools:layout="@layout/artist_details_screen">
+        <action
+            android:id="@+id/action_artistDetailsFragment_to_genreDetailFragment"
+            app:destination="@id/genreDetailFragment" />
+    </fragment>
+</navigation>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MusicWiki</string>
+    <string name="choose_genre_message">Choose a genre to start with</string>
+    <string name="welcome">Welcome!</string>
+    <string name="app_name_lowercase">musicwiki</string>
+    <string name="album_thumbnail">Thumbnail for the album</string>
+    <string name="top_tracks">Top Tracks</string>
+    <string name="artist_thumbnail">Thumbnail for the artist</string>
+    <string name="playcount">Playcount</string>
+    <string name="followers">Followers</string>
+    <string name="top_albums">Top Albums</string>
+</resources>

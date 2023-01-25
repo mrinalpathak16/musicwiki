@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_genreDetailFragment_to_artistDetailsFragment"
             app:destination="@id/artistDetailsFragment" />
+        <argument
+            android:name="tagName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/albumDetailsFragment"
@@ -34,6 +37,12 @@
         <action
             android:id="@+id/action_albumDetailsFragment_to_genreDetailFragment"
             app:destination="@id/genreDetailFragment" />
+        <argument
+            android:name="albumName"
+            app:argType="string" />
+        <argument
+            android:name="artistName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/artistDetailsFragment"
@@ -43,5 +52,8 @@
         <action
             android:id="@+id/action_artistDetailsFragment_to_genreDetailFragment"
             app:destination="@id/genreDetailFragment" />
+        <argument
+            android:name="artistName"
+            app:argType="string" />
     </fragment>
 </navigation>

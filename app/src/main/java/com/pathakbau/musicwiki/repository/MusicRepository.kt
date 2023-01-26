@@ -1,6 +1,7 @@
 package com.pathakbau.musicwiki.repository
 
 import com.pathakbau.musicwiki.api.RetrofitInstance
+import com.pathakbau.musicwiki.data.album.AlbumInfoResponse
 import com.pathakbau.musicwiki.data.genre.TagInfoResponse
 import com.pathakbau.musicwiki.data.genre.albumtab.AlbumsTabResponse
 import com.pathakbau.musicwiki.data.genre.artiststab.ArtistsTabResponse
@@ -24,5 +25,8 @@ class MusicRepository {
 
     suspend fun getGenreTabTracks(genreName: String): Response<TracksTabResponse> =
         RetrofitInstance.musicApi.getGenreTabTracks(genreName)
+
+    suspend fun getAlbumInfo(albumName: String, artistName: String): Response<AlbumInfoResponse> =
+        RetrofitInstance.musicApi.getAlbumInfo(albumName, artistName)
 
 }

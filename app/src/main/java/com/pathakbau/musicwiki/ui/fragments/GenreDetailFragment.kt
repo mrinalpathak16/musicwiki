@@ -40,7 +40,7 @@ class GenreDetailFragment: Fragment() {
         binding.collapsingLayout.title = args.tagName
 
         viewModel = (activity as MainActivity).viewModel
-        viewModel.refactorGenreInfo(args.tagName)
+        viewModel.requestGenreInfo(args.tagName)
 
         tabsAdapter = GenreDetailTabsAdapter(this)
         binding.viewPager.adapter = tabsAdapter

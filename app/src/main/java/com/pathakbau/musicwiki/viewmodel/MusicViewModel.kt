@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pathakbau.musicwiki.data.album.AlbumInfoResponse
 import com.pathakbau.musicwiki.data.genre.TabListItem
 import com.pathakbau.musicwiki.data.genre.TagInfoResponse
 import com.pathakbau.musicwiki.data.genre.albumtab.AlbumsTabResponse
@@ -33,6 +34,8 @@ class MusicViewModel: ViewModel() {
     val genreTabArtists: MutableLiveData<Resource<List<TabListItem>>> = MutableLiveData()
     val genreTabTracks: MutableLiveData<Resource<List<TabListItem>>> = MutableLiveData()
 
+    val albumInfo: MutableLiveData<Resource<AlbumInfoResponse>> = MutableLiveData()
+
     init {
         requestTopGenres()
     }
@@ -43,7 +46,7 @@ class MusicViewModel: ViewModel() {
         topGenres.postValue(handleResponse(response))
     }
 
-    fun refactorGenreInfo(genreName: String) = viewModelScope.launch {
+    fun requestGenreInfo(genreName: String) = viewModelScope.launch {
         genreInfo.postValue(Resource.Loading())
         val genreInfoResponse = musicRepository.getGenreInfo(genreName)
         genreInfo.postValue((handleResponse(genreInfoResponse)))
@@ -69,6 +72,12 @@ class MusicViewModel: ViewModel() {
             genreTabTracks.postValue(response)
         }
         else -> throw RuntimeException("unexpected behaviour in tabs!!")
+    }
+
+    fun requestAlbumInfo(albumName: String, artistName: String) = viewModelScope.launch {
+        albumInfo.postValue(Resource.Loading())
+        val albumInfoResponse = musicRepository.getAlbumInfo(albumName, artistName)
+        albumInfo.postValue(handleResponse(albumInfoResponse))
     }
 
     private fun <T> handleResponse(response: Response<T>): Resource<T> {

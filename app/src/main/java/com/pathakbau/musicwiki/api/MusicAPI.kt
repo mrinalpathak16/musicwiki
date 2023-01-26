@@ -1,5 +1,6 @@
 package com.pathakbau.musicwiki.api
 
+import com.pathakbau.musicwiki.data.album.AlbumInfoResponse
 import com.pathakbau.musicwiki.data.genre.TagInfoResponse
 import com.pathakbau.musicwiki.data.genre.albumtab.AlbumsTabResponse
 import com.pathakbau.musicwiki.data.genre.artiststab.ArtistsTabResponse
@@ -69,5 +70,19 @@ interface MusicAPI {
         @Query("format")
         format:String = JSON
     ): Response<TracksTabResponse>
+
+    @GET(".")
+    suspend fun getAlbumInfo(
+        @Query("album")
+        albumName: String,
+        @Query("artist")
+        artistName: String,
+        @Query("api_key")
+        apiKey: String = LAST_FM_API_KEY,
+        @Query("method")
+        method:String = ALBUM_GET_INFO,
+        @Query("format")
+        format:String = JSON
+    ): Response<AlbumInfoResponse>
 
 }

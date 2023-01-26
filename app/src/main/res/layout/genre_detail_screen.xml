@@ -41,6 +41,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -49,18 +50,23 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/genreInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginRight="20dp"
+                android:layout_marginBottom="24dp"
                 android:justificationMode="inter_word"
                 tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla a sem a est blandit sollicitudin. Donec quis magna id quam auctor condimentum vehicula vitae tortor. Aenean fringilla dui non mattis ullamcorper. Quisque consequat vestibulum justo, et finibus tellus tincidunt vel. Donec facilisis est et ligula porttitor laoreet. Vivamus dictum placerat molestie. Proin mattis ornare turpis, id tristique nisl faucibus dictum. Sed nunc ante, consectetur bibendum erat sit amet, scelerisque elementum nulla. Nullam eleifend lobortis tortor, sit amet pellentesque dolor fermentum a. Nunc ornare dui a risus dictum, sit amet gravida arcu rutrum. Donec maximus, neque eget accumsan sollicitudin, lorem augue varius est, vel luctus elit mi faucibus eros." />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:tabIndicatorColor="#E91E63"
+                app:tabSelectedTextColor="#9C27B0" />
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"

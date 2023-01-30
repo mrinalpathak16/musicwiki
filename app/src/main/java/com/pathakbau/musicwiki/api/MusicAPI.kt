@@ -1,6 +1,9 @@
 package com.pathakbau.musicwiki.api
 
 import com.pathakbau.musicwiki.data.album.AlbumInfoResponse
+import com.pathakbau.musicwiki.data.artist.ArtistInfoResponse
+import com.pathakbau.musicwiki.data.artist.topAlbums.ArtistTopAlbumsResponse
+import com.pathakbau.musicwiki.data.artist.topTracks.ArtistTopTracksResponse
 import com.pathakbau.musicwiki.data.genre.TagInfoResponse
 import com.pathakbau.musicwiki.data.genre.albumtab.AlbumsTabResponse
 import com.pathakbau.musicwiki.data.genre.artiststab.ArtistsTabResponse
@@ -84,5 +87,41 @@ interface MusicAPI {
         @Query("format")
         format:String = JSON
     ): Response<AlbumInfoResponse>
+
+    @GET(".")
+    suspend fun getArtistInfo(
+        @Query("artist")
+        artistName: String,
+        @Query("api_key")
+        apiKey: String = LAST_FM_API_KEY,
+        @Query("method")
+        method:String = ARTIST_GET_INFO,
+        @Query("format")
+        format:String = JSON
+    ): Response<ArtistInfoResponse>
+
+    @GET(".")
+    suspend fun getArtistTopTracks(
+        @Query("artist")
+        artistName: String,
+        @Query("api_key")
+        apiKey: String = LAST_FM_API_KEY,
+        @Query("method")
+        method:String = ARTIST_GET_TOP_TRACKS,
+        @Query("format")
+        format:String = JSON
+    ): Response<ArtistTopTracksResponse>
+
+    @GET(".")
+    suspend fun getArtistTopAlbums(
+        @Query("artist")
+        artistName: String,
+        @Query("api_key")
+        apiKey: String = LAST_FM_API_KEY,
+        @Query("method")
+        method:String = ARTIST_GET_TOP_ALBUMS,
+        @Query("format")
+        format:String = JSON
+    ): Response<ArtistTopAlbumsResponse>
 
 }

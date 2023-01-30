@@ -5,6 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pathakbau.musicwiki.data.album.AlbumInfoResponse
+import com.pathakbau.musicwiki.data.artist.ArtistInfoAggregatedResponse
+import com.pathakbau.musicwiki.data.artist.ArtistInfoResponse
+import com.pathakbau.musicwiki.data.artist.TopListItem
+import com.pathakbau.musicwiki.data.artist.topAlbums.ArtistTopAlbumsResponse
+import com.pathakbau.musicwiki.data.artist.topTracks.ArtistTopTracksResponse
 import com.pathakbau.musicwiki.data.genre.TabListItem
 import com.pathakbau.musicwiki.data.genre.TagInfoResponse
 import com.pathakbau.musicwiki.data.genre.albumtab.AlbumsTabResponse
@@ -35,6 +40,8 @@ class MusicViewModel: ViewModel() {
     val genreTabTracks: MutableLiveData<Resource<List<TabListItem>>> = MutableLiveData()
 
     val albumInfo: MutableLiveData<Resource<AlbumInfoResponse>> = MutableLiveData()
+
+    val artistInfo: MutableLiveData<Resource<ArtistInfoAggregatedResponse>> = MutableLiveData()
 
     init {
         requestTopGenres()
@@ -78,6 +85,18 @@ class MusicViewModel: ViewModel() {
         albumInfo.postValue(Resource.Loading())
         val albumInfoResponse = musicRepository.getAlbumInfo(albumName, artistName)
         albumInfo.postValue(handleResponse(albumInfoResponse))
+    }
+
+    fun requestArtistInfo(artistName: String) = viewModelScope.launch {
+        artistInfo.postValue(Resource.Loading())
+        val artistInfoResponse = musicRepository.getArtistInfo(artistName)
+        val artistTopTracksResponse = musicRepository.getArtistTopTracks(artistName)
+        val artistTopAlbumsResponse = musicRepository.getArtistTopAlbums(artistName)
+        artistInfo.postValue(handleArtistInfoResponse(
+            artistInfoResponse,
+            artistTopTracksResponse,
+            artistTopAlbumsResponse
+        ))
     }
 
     private fun <T> handleResponse(response: Response<T>): Resource<T> {
@@ -126,5 +145,34 @@ class MusicViewModel: ViewModel() {
             }
         }
         return Resource.Error(response.message())
+    }
+
+    private fun handleArtistInfoResponse(
+        artistInfoResponse: Response<ArtistInfoResponse>,
+        artistTopTracksResponse: Response<ArtistTopTracksResponse>,
+        artistTopAlbumsResponse: Response<ArtistTopAlbumsResponse>
+    ): Resource<ArtistInfoAggregatedResponse> {
+        if (
+            artistInfoResponse.isSuccessful &&
+                    artistTopTracksResponse.isSuccessful &&
+                    artistTopAlbumsResponse.isSuccessful
+        ) {
+            artistInfoResponse.body()?.let { artistInfo ->
+                artistTopTracksResponse.body()?.let { topTracks ->
+                    artistTopAlbumsResponse.body()?.let { topAlbums ->
+                        val topTracksList = topTracks.toptracks.track.map { track ->
+                            TopListItem(track.name, track.artist.name)
+                        }
+                        val topAlbumsList = topAlbums.topalbums.album.map { album ->
+                            TopListItem(album.name, album.artist.name)
+                        }
+                        return Resource.Success(
+                            ArtistInfoAggregatedResponse(artistInfo, topTracksList, topAlbumsList)
+                        )
+                    }
+                }
+            }
+        }
+        return Resource.Error(artistInfoResponse.message())
     }
 }

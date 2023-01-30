@@ -1,4 +1,4 @@
-package com.pathakbau.musicwiki.data.genre.trackstab
+package com.pathakbau.musicwiki.data
 
 
 import com.google.gson.annotations.SerializedName

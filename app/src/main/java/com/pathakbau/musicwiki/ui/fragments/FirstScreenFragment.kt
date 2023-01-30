@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.pathakbau.musicwiki.R
 import com.pathakbau.musicwiki.adapter.GenreListAdapter
 import com.pathakbau.musicwiki.data.topGenres.Tag
 import com.pathakbau.musicwiki.databinding.FirstScreenBinding
@@ -72,6 +74,30 @@ class FirstScreenFragment: Fragment() {
         }
 
         viewModel.firstScreenMode.observe(viewLifecycleOwner) { mode ->
+            when (mode) {
+                FirstScreenModes.COLLAPSED -> binding.chooseGenreTextView
+                    .setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        null,
+                        null,
+                        ResourcesCompat.getDrawable(
+                            resources,
+                            R.drawable.ic_expand_circle_down_24px,
+                            null
+                        ),
+                        null
+                    )
+                FirstScreenModes.EXPANDED -> binding.chooseGenreTextView
+                    .setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        null,
+                        null,
+                        ResourcesCompat.getDrawable(
+                            resources,
+                            R.drawable.ic_collapse_circle_up_24px,
+                            null
+                        ),
+                        null
+                    )
+            }
             topGenresAdapter.listMode = mode
             topGenresAdapter.notifyDataSetChanged()
         }

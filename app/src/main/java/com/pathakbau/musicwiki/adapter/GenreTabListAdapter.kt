@@ -1,13 +1,18 @@
 package com.pathakbau.musicwiki.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.pathakbau.musicwiki.R
 import com.pathakbau.musicwiki.data.genre.TabListItem
 import com.pathakbau.musicwiki.databinding.TabContentItemBinding
+
+private const val TAG = "GenreTabListAdapter"
 
 class GenreTabListAdapter() :
     RecyclerView.Adapter<GenreTabListAdapter.TabListViewHolder>() {
@@ -36,6 +41,10 @@ class GenreTabListAdapter() :
     override fun onBindViewHolder(holder: TabListViewHolder, position: Int) {
         val tabListItem = differ.currentList[position]
         holder.binding.apply {
+            Glide.with(thumbnail)
+                .load(tabListItem.image[1].text)
+                .placeholder(R.drawable.placeholder)
+                .into(thumbnail)
             textPrimary.text = tabListItem.text1
             textSecondary.text = tabListItem.text2
             root.setOnClickListener {

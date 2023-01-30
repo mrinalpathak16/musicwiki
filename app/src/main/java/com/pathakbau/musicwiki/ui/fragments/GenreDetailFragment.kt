@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.tabs.TabLayoutMediator
 import com.pathakbau.musicwiki.adapter.GenreDetailTabsAdapter
@@ -15,11 +16,11 @@ import com.pathakbau.musicwiki.ui.MainActivity
 import com.pathakbau.musicwiki.util.Resource
 import com.pathakbau.musicwiki.viewmodel.MusicViewModel
 
+private const val TAG = "GenreDetailFragment"
+
 class GenreDetailFragment: Fragment() {
 
     //TODO: Scroll behaviour buggy
-
-    private val TAG = "GenreDetailFragment"
 
     private lateinit var binding: GenreDetailScreenBinding
     private lateinit var viewModel: MusicViewModel
@@ -38,6 +39,9 @@ class GenreDetailFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.collapsingLayout.title = args.tagName
+        binding.topAppBar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
         viewModel = (activity as MainActivity).viewModel
         viewModel.requestGenreInfo(args.tagName)

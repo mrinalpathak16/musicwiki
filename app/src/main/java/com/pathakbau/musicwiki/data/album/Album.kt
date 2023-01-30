@@ -2,6 +2,7 @@ package com.pathakbau.musicwiki.data.album
 
 
 import com.google.gson.annotations.SerializedName
+import com.pathakbau.musicwiki.data.Image
 
 data class Album(
     @SerializedName("artist")

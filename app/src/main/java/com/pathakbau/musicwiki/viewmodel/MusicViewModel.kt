@@ -18,6 +18,7 @@ import com.pathakbau.musicwiki.data.genre.trackstab.TracksTabResponse
 import com.pathakbau.musicwiki.data.topGenres.TopTagsResponse
 import com.pathakbau.musicwiki.repository.MusicRepository
 import com.pathakbau.musicwiki.util.Resource
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -89,9 +90,20 @@ class MusicViewModel: ViewModel() {
 
     fun requestArtistInfo(artistName: String) = viewModelScope.launch {
         artistInfo.postValue(Resource.Loading())
-        val artistInfoResponse = musicRepository.getArtistInfo(artistName)
-        val artistTopTracksResponse = musicRepository.getArtistTopTracks(artistName)
-        val artistTopAlbumsResponse = musicRepository.getArtistTopAlbums(artistName)
+
+        val x = async {
+            musicRepository.getArtistInfo(artistName)
+        }
+        val y = async {
+            musicRepository.getArtistTopTracks(artistName)
+        }
+        val z = async {
+            musicRepository.getArtistTopAlbums(artistName)
+        }
+        val artistInfoResponse = x.await()
+        val artistTopTracksResponse = y.await()
+        val artistTopAlbumsResponse = z.await()
+
         artistInfo.postValue(handleArtistInfoResponse(
             artistInfoResponse,
             artistTopTracksResponse,
@@ -112,7 +124,7 @@ class MusicViewModel: ViewModel() {
         if (response.isSuccessful) {
             response.body()?.let {
                 val res =  it.albums.album.map { album ->
-                    TabListItem(album.name, album.artist.name)
+                    TabListItem(album.image, album.name,album.artist.name)
                 }
                 return Resource.Success(res)
             }
@@ -126,7 +138,7 @@ class MusicViewModel: ViewModel() {
             response.body()?.let {
                 Log.d(TAG, "handleArtistTabResponse: ${it}")
                 val res =  it.topartists.artist.map { artist ->
-                    TabListItem(artist.name)
+                    TabListItem(artist.image, artist.name)
                 }
                 return Resource.Success(res)
             }
@@ -139,7 +151,7 @@ class MusicViewModel: ViewModel() {
         if (response.isSuccessful) {
             response.body()?.let {
                 val res =  it.tracks.track.map { track ->
-                    TabListItem(track.name, track.artist.name)
+                    TabListItem(track.image, track.name, track.artist.name)
                 }
                 return Resource.Success(res)
             }
@@ -161,10 +173,10 @@ class MusicViewModel: ViewModel() {
                 artistTopTracksResponse.body()?.let { topTracks ->
                     artistTopAlbumsResponse.body()?.let { topAlbums ->
                         val topTracksList = topTracks.toptracks.track.map { track ->
-                            TopListItem(track.name, track.artist.name)
+                            TopListItem(track.name, track.artist.name, track.image)
                         }
                         val topAlbumsList = topAlbums.topalbums.album.map { album ->
-                            TopListItem(album.name, album.artist.name)
+                            TopListItem(album.name, album.artist.name, album.image)
                         }
                         return Resource.Success(
                             ArtistInfoAggregatedResponse(artistInfo, topTracksList, topAlbumsList)

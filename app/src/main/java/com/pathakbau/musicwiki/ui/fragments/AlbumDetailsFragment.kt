@@ -11,6 +11,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.pathakbau.musicwiki.R
 import com.pathakbau.musicwiki.adapter.GenreListAdapter
 import com.pathakbau.musicwiki.data.topGenres.Tag
 import com.pathakbau.musicwiki.databinding.AlbumDetailsScreenBinding
@@ -44,13 +46,20 @@ class AlbumDetailsFragment: Fragment() {
         viewModel.requestAlbumInfo(args.albumName, args.artistName)
         binding.labelPrimary.text = args.albumName
         binding.labelSecondary.text = args.artistName
+        binding.topAppBar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
         viewModel.albumInfo.observe(viewLifecycleOwner) {response ->
             when (response) {
                 is Resource.Success -> {
                     //TODO: hide progress bar
                     response.data?.let { data ->
-                        binding.details.text = data.album.wiki.summary
+                        Glide.with(binding.thumbnail)
+                            .load(data.album.image[3].text)
+                            .placeholder(R.drawable.placeholder)
+                            .into(binding.thumbnail)
+                        binding.details.text = data.album.wiki?.summary
                         rvAdapter.differ.submitList(data.album.tags.tag)
                     }
                 }

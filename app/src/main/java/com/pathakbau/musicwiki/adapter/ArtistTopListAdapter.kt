@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.pathakbau.musicwiki.R
 import com.pathakbau.musicwiki.data.artist.TopListItem
 import com.pathakbau.musicwiki.databinding.TopItemBinding
 
@@ -35,6 +37,10 @@ class ArtistTopListAdapter : RecyclerView.Adapter<ArtistTopListAdapter.TopItemVi
     override fun onBindViewHolder(holder: TopItemViewHolder, position: Int) {
         val tabListItem = differ.currentList[position]
         holder.binding.apply {
+            Glide.with(imageView)
+                .load(tabListItem.image[1].text)
+                .placeholder(R.drawable.placeholder)
+                .into(imageView)
             textPrimary.text = tabListItem.name
             textSecondary.text = tabListItem.artistName
             root.setOnClickListener {

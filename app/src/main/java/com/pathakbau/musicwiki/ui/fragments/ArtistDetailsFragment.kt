@@ -10,9 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.pathakbau.musicwiki.R
 import com.pathakbau.musicwiki.adapter.ArtistTopListAdapter
 import com.pathakbau.musicwiki.adapter.GenreListAdapter
-import com.pathakbau.musicwiki.adapter.GenreTabListAdapter
 import com.pathakbau.musicwiki.data.topGenres.Tag
 import com.pathakbau.musicwiki.databinding.ArtistDetailsScreenBinding
 import com.pathakbau.musicwiki.ui.MainActivity
@@ -46,12 +47,19 @@ class ArtistDetailsFragment: Fragment() {
 
         viewModel.requestArtistInfo(args.artistName)
         binding.artistName.text = args.artistName
+        binding.topAppBar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
 
         viewModel.artistInfo.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
                     //TODO: hide progress bar
                     response.data?.let { data ->
+                        Glide.with(binding.thumbnail)
+                            .load(data.artistInfoResponse.artist.image[3].text)
+                            .placeholder(R.drawable.placeholder)
+                            .into(binding.thumbnail)
                         tagsRVAdapter.differ.submitList(data.artistInfoResponse.artist.tags.tag)
                         topTracksRVAdapter.differ.submitList(data.artistTopTracksResponse)
                         topAlbumsRVAdapter.differ.submitList(data.artistTopAlbumsResponse)

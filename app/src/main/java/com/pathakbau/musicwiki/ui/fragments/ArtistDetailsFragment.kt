@@ -18,7 +18,9 @@ import com.pathakbau.musicwiki.data.topGenres.Tag
 import com.pathakbau.musicwiki.databinding.ArtistDetailsScreenBinding
 import com.pathakbau.musicwiki.ui.MainActivity
 import com.pathakbau.musicwiki.util.Resource
+import com.pathakbau.musicwiki.util.formatCount
 import com.pathakbau.musicwiki.viewmodel.MusicViewModel
+import kotlinx.coroutines.processNextEventInCurrentThread
 
 private const val TAG = "ArtistDetailsFragment"
 
@@ -54,7 +56,6 @@ class ArtistDetailsFragment: Fragment() {
         viewModel.artistInfo.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
-                    //TODO: hide progress bar
                     response.data?.let { data ->
                         Glide.with(binding.thumbnail)
                             .load(data.artistInfoResponse.artist.image[3].text)
@@ -63,20 +64,38 @@ class ArtistDetailsFragment: Fragment() {
                         tagsRVAdapter.differ.submitList(data.artistInfoResponse.artist.tags.tag)
                         topTracksRVAdapter.differ.submitList(data.artistTopTracksResponse)
                         topAlbumsRVAdapter.differ.submitList(data.artistTopAlbumsResponse)
-                        binding.playcount.text = data.artistInfoResponse.artist.stats.playcount
-                        binding.followers.text = data.artistInfoResponse.artist.stats.listeners
-                        binding.details.text = data.artistInfoResponse.artist.bio.summary
+                        binding.apply {
+                            playcount.text = formatCount(
+                                data.artistInfoResponse.artist.stats.playcount.toLong()
+                            )
+                            followers.text = formatCount(
+                                data.artistInfoResponse.artist.stats.listeners.toLong()
+                            )
+                            details.text = data.artistInfoResponse.artist.bio.summary
+                        }
+                    }
+                    binding.apply {
+                        progressLayout.visibility = View.GONE
+                        mainGroup1.visibility = View.VISIBLE
+                        mainGroup2.visibility = View.VISIBLE
                     }
                 }
                 is Resource.Error -> {
-                    //TODO: hide progress bar
+                    binding.progressLayout.visibility = View.GONE
                     response.message?.let { message ->
                         Toast.makeText(activity, "An Error Occurred!", Toast.LENGTH_SHORT).show()
                         Log.e(TAG, "onViewCreated: $message")
                     }
                 }
                 is Resource.Loading -> {
-                    //TODO: show progress bar
+                    tagsRVAdapter.differ.submitList(ArrayList())
+                    topTracksRVAdapter.differ.submitList(ArrayList())
+                    topAlbumsRVAdapter.differ.submitList(ArrayList())
+                    binding.apply {
+                        mainGroup1.visibility = View.GONE
+                        mainGroup2.visibility = View.INVISIBLE
+                        progressLayout.visibility = View.VISIBLE
+                    }
                 }
             }
         }

@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.pathakbau.musicwiki.R
@@ -53,7 +52,6 @@ class AlbumDetailsFragment: Fragment() {
         viewModel.albumInfo.observe(viewLifecycleOwner) {response ->
             when (response) {
                 is Resource.Success -> {
-                    //TODO: hide progress bar
                     response.data?.let { data ->
                         Glide.with(binding.thumbnail)
                             .load(data.album.image[3].text)
@@ -62,16 +60,23 @@ class AlbumDetailsFragment: Fragment() {
                         binding.details.text = data.album.wiki?.summary
                         rvAdapter.differ.submitList(data.album.tags.tag)
                     }
+                    binding.apply {
+                        progressLayout.visibility = View.GONE
+                        mainGroup.visibility = View.VISIBLE
+                    }
                 }
                 is Resource.Error -> {
-                    //TODO: hide progress bar
+                    binding.progressLayout.visibility = View.GONE
                     response.message?.let { message ->
                         Toast.makeText(activity, "An Error Occurred!", Toast.LENGTH_SHORT).show()
                         Log.e(TAG, "onViewCreated: $message")
                     }
                 }
                 is Resource.Loading -> {
-                    //TODO: show progress bar
+                    binding.apply {
+                        mainGroup.visibility = View.INVISIBLE
+                        progressLayout.visibility = View.VISIBLE
+                    }
                 }
             }
         }

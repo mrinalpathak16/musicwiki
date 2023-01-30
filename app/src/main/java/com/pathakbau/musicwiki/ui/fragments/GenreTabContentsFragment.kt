@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,13 +17,17 @@ import com.pathakbau.musicwiki.databinding.TabContentsBinding
 import com.pathakbau.musicwiki.ui.MainActivity
 import com.pathakbau.musicwiki.util.Resource
 import com.pathakbau.musicwiki.viewmodel.MusicViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-private const val ARG_TAB_TYPE = "type"
+const val ARG_TAB_TYPE = "type"
+const val ARG_TAG_NAME = "tagName"
 private const val TAG = "GenreTabContentsFragment"
 
 class GenreTabContentsFragment : Fragment() {
 
     private var tabType: Int = 0
+    private lateinit var tagName: String
 
     private lateinit var binding: TabContentsBinding
     private lateinit var viewModel: MusicViewModel
@@ -32,6 +37,7 @@ class GenreTabContentsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             tabType = it.getInt(ARG_TAB_TYPE)
+            tagName = it.getString(ARG_TAG_NAME)?:""
         }
     }
 
@@ -48,21 +54,7 @@ class GenreTabContentsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
 
-        viewModel.genreInfo.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is Resource.Success -> {
-                    response.data?.let { data ->
-                        viewModel.requestGenreTabContents(data.tag.name, tabType)
-                    }
-                }
-                is Resource.Error -> {
-                    //TODO: clear recycler view
-                }
-                is Resource.Loading -> {
-                    //TODO: clear recycler view
-                }
-            }
-        }
+        viewModel.requestGenreTabContents(tagName, tabType)
 
         setupRV()
     }
@@ -93,16 +85,27 @@ class GenreTabContentsFragment : Fragment() {
                     response.data?.let { data ->
                         tabListAdapter.differ.submitList(data)
                     }
+                    lifecycleScope.launch {
+                        delay(500)
+                        binding.apply {
+                            progressLayout.visibility = View.GONE
+                            mainGroup.visibility = View.VISIBLE
+                        }
+                    }
                 }
                 is Resource.Error -> {
-                    //TODO: clear recycler view
+                    binding.progressLayout.visibility = View.GONE
                     response.message?.let { message ->
                         Toast.makeText(activity, "An Error Occurred!", Toast.LENGTH_SHORT).show()
                         Log.e(TAG, "onViewCreated: $message")
                     }
                 }
                 is Resource.Loading -> {
-                    //TODO: clear recycler view
+                    tabListAdapter.differ.submitList(ArrayList())
+                    binding.apply {
+                        mainGroup.visibility = View.INVISIBLE
+                        progressLayout.visibility = View.VISIBLE
+                    }
                 }
             }
         }

@@ -46,7 +46,7 @@ class GenreDetailFragment: Fragment() {
         viewModel = (activity as MainActivity).viewModel
         viewModel.requestGenreInfo(args.tagName)
 
-        tabsAdapter = GenreDetailTabsAdapter(this)
+        tabsAdapter = GenreDetailTabsAdapter(this, args.tagName)
         binding.viewPager.adapter = tabsAdapter
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab,position ->
             tab.text = when (position) {
@@ -60,21 +60,26 @@ class GenreDetailFragment: Fragment() {
         viewModel.genreInfo.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
-                    //TODO: hide progress bar
                     response.data?.let { data ->
                         binding.genreInfo.text = data.tag.wiki.summary
                     }
+                    binding.apply {
+                        progressLayout.visibility = View.GONE
+                        mainGroup.visibility = View.VISIBLE
+                    }
                 }
                 is Resource.Error -> {
-                    //TODO: hide progress bar
+                    binding.progressLayout.visibility = View.GONE
                     response.message?.let { message ->
                         Toast.makeText(activity, "An Error Occurred!", Toast.LENGTH_SHORT).show()
                         Log.e(TAG, "onViewCreated: $message")
                     }
                 }
                 is Resource.Loading -> {
-                    binding.genreInfo.text = ""
-                    //TODO: show progress bar
+                    binding.apply {
+                        mainGroup.visibility = View.GONE
+                        progressLayout.visibility = View.VISIBLE
+                    }
                 }
             }
         }

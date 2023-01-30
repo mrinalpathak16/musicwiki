@@ -36,7 +36,9 @@
         tools:layout="@layout/album_details_screen">
         <action
             android:id="@+id/action_albumDetailsFragment_to_genreDetailFragment"
-            app:destination="@id/genreDetailFragment" />
+            app:destination="@id/genreDetailFragment"
+            app:popUpTo="@id/genreDetailFragment"
+            app:popUpToInclusive="true" />
         <argument
             android:name="albumName"
             app:argType="string" />
@@ -51,7 +53,9 @@
         tools:layout="@layout/artist_details_screen">
         <action
             android:id="@+id/action_artistDetailsFragment_to_genreDetailFragment"
-            app:destination="@id/genreDetailFragment" />
+            app:destination="@id/genreDetailFragment"
+            app:popUpTo="@id/genreDetailFragment"
+            app:popUpToInclusive="true" />
         <argument
             android:name="artistName"
             app:argType="string" />

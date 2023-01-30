@@ -19,6 +19,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/mainGroup1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible"
+                app:constraint_referenced_ids="playcount,followers_label,playcount_label,followers" />
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/thumbnail"
                 android:layout_width="0dp"
@@ -132,6 +140,26 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/progressLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ProgressBar
+                android:layout_width="56dp"
+                android:layout_height="56dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mainGroup2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/genres"
                 android:layout_width="match_parent"
@@ -154,6 +182,7 @@
                 tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla a sem a est blandit sollicitudin. Donec quis magna id quam auctor condimentum vehicula vitae tortor. Aenean fringilla dui non mattis ullamcorper. Quisque consequat vestibulum justo, et finibus tellus tincidunt vel. Donec facilisis est et ligula porttitor laoreet. Vivamus dictum placerat molestie. Proin mattis ornare turpis, id tristique" />
 
             <TextView
+                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
@@ -175,6 +204,7 @@
                 tools:orientation="horizontal" />
 
             <TextView
+                android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
@@ -195,6 +225,7 @@
                 tools:listitem="@layout/top_item"
                 tools:orientation="horizontal" />
 
+        </LinearLayout>
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

@@ -20,9 +20,9 @@ import com.pathakbau.musicwiki.ui.MainActivity
 import com.pathakbau.musicwiki.viewmodel.MusicViewModel
 import com.pathakbau.musicwiki.util.Resource
 
-class FirstScreenFragment: Fragment() {
+private const val TAG = "FirstScreenFragment"
 
-    private val TAG = "FirstScreenFragment"
+class FirstScreenFragment: Fragment() {
 
     private lateinit var binding: FirstScreenBinding
     private lateinit var topGenresAdapter: GenreListAdapter
@@ -55,20 +55,26 @@ class FirstScreenFragment: Fragment() {
         viewModel.topGenres.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
-                    //TODO: hide progress bar
                     response.data?.let { data ->
                         topGenresAdapter.differ.submitList(data.topTags.tags)
                     }
+                    binding.apply {
+                        progressLayout.visibility = View.GONE
+                        mainGroup.visibility = View.VISIBLE
+                    }
                 }
                 is Resource.Error -> {
-                    //TODO: hide progress bar
+                    binding.progressLayout.visibility = View.GONE
                     response.message?.let { message ->
                         Toast.makeText(activity, "An Error Occurred!", Toast.LENGTH_SHORT).show()
                         Log.e(TAG, "onViewCreated: $message")
                     }
                 }
                 is Resource.Loading -> {
-                    //TODO: show progress bar
+                    binding.apply {
+                        mainGroup.visibility = View.INVISIBLE
+                        progressLayout.visibility = View.VISIBLE
+                    }
                 }
             }
         }
